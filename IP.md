@@ -24,6 +24,12 @@ IP-9: https://youtu.be/-nXRVIb1u5s (NAT)
     - [Missatges comuns](#missatges-comuns)
     - [MTU Path Discovery](#mtu-path-discovery)
   - [Protocol DNS](#protocol-dns)
+  - [Protocol DHCP](#protocol-dhcp)
+    - [Missatges DHCP](#missatges-dhcp)
+      - [Fields](#fields)
+    - [Com funciona](#com-funciona)
+  - [Mecanisme NAT (Network Address Translation)](#mecanisme-nat-network-address-translation)
+    - [DNAT (Destination NAT)](#dnat-destination-nat)
 
 # IP
 
@@ -223,7 +229,79 @@ Tradueix noms a adreces IP.
 > ```
 > ```bash
 > # Pregunta
-> PC > SERVIDOR.33: 53040+ A? PAGINA
+> [PC] > [SERVIDOR].53: [IDENTIFICADOR]+ A? [PAGINA]
 > # Resposta
-> SERVIDOR.33 > PC: 53040 1/2/2 PAGINA A "DIRECCIO IP PAGINA"
+> [SERVIDOR].53 > [PC]: [IDENTIFICADOR] 1/2/2 [PAGINA] A [DIRECCIO IP PAGINA]
 > ```
+
+> FI VIDEO 7
+
+## Protocol DHCP
+Configura dinàmicament un host en una xarxa (necessites un servidor DHCP).
+
+- La configuració pot ser:
+  - **Dinàmica**: El host està configurat durant un temps específic (leasing time)
+  - **Automàtica**: Leasing time ilimitat
+  - **Manual IP**: Les adreces IP s'assignen a MAC específiques
+
+### Missatges DHCP
+
+| Nom          | Descripció                                                                          |
+| ------------ | ----------------------------------------------------------------------------------- |
+| DHCPDISCOVER | El client fa un broadcast per trobar un servidor DHCP                               |
+| DHCPOFFER    | El servidor respon el DHCPDISCOVER amb una IP                                       |
+| DHCPREQUEST  | El client fa (a, b o c):                                                            |
+|              | (a) Accepta els paràmetres del servidor                                             |
+|              | (b) Confirma que l'adreça que té actualment és correcta (ex. després d'un reboot)   |
+|              | (c) Exté el leasing time                                                            |
+| DHCPACK      | El servidor envia paràmetres de configuració                                        |
+| DHCPNAK      | El servidor indica que l'adreça del client és incorrecta (ex. leasing time expired) |
+| DHCPDECLINE  | El client indica que l'adreça que el servidor li dona ja està en ús                 |
+| DHCPRELEASE  | El client demana que se'l tregui de la xarxa                                        |
+| DHCPINFORM   | El client demana només els paràmetres de configuració local                         |
+
+#### Fields
+
+| Field   | Octets   | Descripció                                             |
+| ------- | -------- | ------------------------------------------------------ |
+| op      | 1        | Tipus del missatge. `1 = BOOTREQUEST`, `2 = BOOTREPLY` |
+| xid     | 4        | Id utilitzat per la comunicació client-servidor        |
+| ciaddr  | 4        |                                                        |
+| yiaddr  | 4        | La IP del client, setejada amb DHCPOFFER               |
+| chaddr  | 16       | MAC del client                                         |
+| options | variable | Paràmetres opcionals                                   |
+
+### Com funciona
+- Missatge UDP
+  - Port servidor: 67
+  - Port client: 68
+
+1. El client fa un DHCPDISCOVER (broadcast)
+2. El servidor respon amb un DHCPOFFER (broadcast)
+3. El client accepta amb un DHCPREQUEST (broadcast)
+4. I finalment el servidor envia la IP amb DHCPACK (broadcast)
+5. Aqui el client ja té la IP configurada
+  
+- Abans que la configuració finalitzi, el client envia un DHCPREQUEST demanant que se li extengui la configuració
+- El servidor respon amb un DHCPACK (broadcast)
+
+## Mecanisme NAT (Network Address Translation)
+Permet accedir des d'una adreça privada (internal) a una adreça publica (internet, external).  
+El NAT es fa des del router.  
+
+Modifica la capçalera IP de cada datagrama.
+
+Es representa amb una taula d'encaminament:
+- Inside: Adreces privades
+- Outside: Adreça pública del router
+- Foreign: Adreça pública d'internet
+- Port NAT: Port virtual del router que permet saber on enviar els paquets rebuts d'internet
+
+| Inside Address/port       | Outside Address/port      | Foreign/remote             |
+| ------------------------- | ------------------------- | -------------------------- |
+| C1/P1 (Computer 1/Port 1) | R/PNAT (Router, Port NAT) | I1/80 (Internet 1/Port 80) |
+
+### DNAT (Destination NAT)
+Permet connexions externes a servidors interns (adreces privades).
+
+Cal fer una entrada manual al NAT indicant que tot el que rebi a l'adreça pública ho redirigeixi a l'adreça privada (alias).
