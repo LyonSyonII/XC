@@ -1,14 +1,3 @@
-- [IP](#ip)
-  - [Classes:](#classes)
-  - [Adreces especials:](#adreces-especials)
-  - [Adreces privades:](#adreces-privades)
-  - [Subnetting](#subnetting)
-  - [Classless Inter-Domain Routing (CIDR)](#classless-inter-domain-routing-cidr)
-  - [Taules d'encaminament](#taules-dencaminament)
-  - [Protocol ARP (Address Resolution Protocol)](#protocol-arp-address-resolution-protocol)
-  - [Capçalera IP](#capçalera-ip)
-  - [Fragmentació IP](#fragmentació-ip)
-
 Vídeos de repàs:  
 IP-1: https://youtu.be/lw8tITa5Cd8 (Adreçament IP)  
 IP-2: https://youtu.be/lgHit1Io54Y (Subxarxes IP)  
@@ -19,6 +8,22 @@ IP-6: https://youtu.be/fnlAeTgdxBM (Protocol ICMP)
 IP-7: https://youtu.be/FPl72YMMf1w (DNS)  
 IP-8: https://youtu.be/5JbE1eWcg7c (DHCP)  
 IP-9: https://youtu.be/-nXRVIb1u5s (NAT)  
+
+- [IP](#ip)
+  - [Classes:](#classes)
+  - [Adreces especials:](#adreces-especials)
+  - [Adreces privades:](#adreces-privades)
+  - [Subnetting](#subnetting)
+  - [Classless Inter-Domain Routing (CIDR)](#classless-inter-domain-routing-cidr)
+  - [Taules d'encaminament](#taules-dencaminament)
+  - [Protocol ARP (Address Resolution Protocol)](#protocol-arp-address-resolution-protocol)
+  - [Capçalera IP](#capçalera-ip)
+  - [Fragmentació IP](#fragmentació-ip)
+  - [Protocol ICMP](#protocol-icmp)
+    - [Format](#format)
+    - [Missatges comuns](#missatges-comuns)
+    - [MTU Path Discovery](#mtu-path-discovery)
+  - [Protocol DNS](#protocol-dns)
 
 # IP
 
@@ -153,3 +158,72 @@ Els datagrames es reconstrueixen a la destinació.
     - `mida fragment - 20 / 8` 8-byte-words (octets)
 
 > FI VIDEO 5
+
+## Protocol ICMP
+Protocol associat al protocol IP.  
+S'utilitza per diagnostic i missatges d'error, pot ser generat per IP, TCP/UDP i aplicacions.
+
+S'encapsula en un datagrama IP (`protocol = 1`).
+
+Un missatge ICMP no en pot generar un altre, per evitar bucles.
+
+- Missatges:
+   - Query
+     - Porten un identificador (Type i Code) que indica si és request o reply.
+   - Error
+
+### Format
+| Nom       | Bits | Descripció                          |
+| --------- | ---- | ----------------------------------- |
+| Type      | 8    | Tipus de missatge                   |
+| Code      | 8    | Codi de l'error                     |
+| Checksum  | 16   | Or llògica del missatge ICMP        |
+| Contingut | 32   | Contingut de l'error, pot no ser-hi |
+
+A més, els missatges d'error porten l'Internet Header + 64 bits del missatge original.
+
+### Missatges comuns
+
+| Type | Code | query/error | Nom                             | Descripció                                                    |
+| ---- | ---- | ----------- | ------------------------------- | ------------------------------------------------------------- |
+| 0    | 0    | query       | echo reply                      | Respon un `echo request`                                      |
+| 3    | 0    | error       | network unreachable             | La xarxa no està a la Routing Table                           |
+|      | 1    | error       | host unreachable                | L'ARP no pot resoldre l'adreça                                |
+|      | 2    | error       | protocol unreachable            | IP no pot entregar el datagrama                               |
+|      | 3    | error       | port unreachable                | TCP/UDP no pot entregar el datagrama (no existeix el port)    |
+|      | 4    | error       | fragmentation needed but DF set | MTU path discovery                                            |
+| 4    | 0    | error       | source quench                   | El router està congestionat                                   |
+| 5    | 0    | error       | redirect for network            | Paquet reencaminat                                            |
+| 8    | 0    | query       | echo request                    | Petició per resposta (ping)                                   |
+| 11   | 0    | error       | TTL=0 during transit            | Enviat pel router quan el TTL d'un missatge és 0 (traceroute) |
+
+### MTU Path Discovery
+Redueix la fragmentació de la xarxa adaptant la mida MTU dels paquets.
+
+Es posa **D**on't **F**ragment a 1 i es va actualitzant la mida dels datagrames que s'envien basat en la resposta.  
+Es basa en l'error 3-4 (`fragmentation needed but DF set`).
+
+La mida MTU final sempre serà la més petita que s'hagi trobat.
+
+> FI VIDEO 6
+
+## Protocol DNS
+Tradueix noms a adreces IP.
+
+> `rogent.ac.upc.edu` => `147.83.31.7`
+
+- Per missatges curts utilitza UDP, per llargs TCP
+- Well-known port: 53
+ 
+> ```bash
+> # Pregunta
+> 147.83.34.125.1333 > 147.83.32.3.53: 53040+ A? www.foo.org
+> # Resposta
+> 147.83.32.3.53 > 147.83.34.125.1333: 53040 1/2/2 www.foo.org A 198.133.219.10
+> ```
+> ```bash
+> # Pregunta
+> PC > SERVIDOR.33: 53040+ A? PAGINA
+> # Resposta
+> SERVIDOR.33 > PC: 53040 1/2/2 PAGINA A "DIRECCIO IP PAGINA"
+> ```
