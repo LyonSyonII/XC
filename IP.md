@@ -9,6 +9,17 @@
   - [Capçalera IP](#capçalera-ip)
   - [Fragmentació IP](#fragmentació-ip)
 
+Vídeos de repàs:
+IP-1: https://youtu.be/lw8tITa5Cd8    (Adreçament IP)
+IP-2: https://youtu.be/lgHit1Io54Y     (Subxarxes IP)
+IP-3: https://youtu.be/TiLpbNlYz3o   (Talues d'encaminament)
+IP-4: https://youtu.be/a8osS-fVkqI    (Protocol ARP)
+IP-5: https://youtu.be/wWd2skddCuY (Capçalera IP)
+IP-6: https://youtu.be/fnlAeTgdxBM    (Protocol ICMP) 
+IP-7: https://youtu.be/FPl72YMMf1w  (DNS)
+IP-8: https://youtu.be/5JbE1eWcg7c   (DHCP)
+IP-9: https://youtu.be/-nXRVIb1u5s    (NAT) 
+
 # IP
 
 - 32 bits
