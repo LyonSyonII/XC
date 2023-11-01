@@ -20,7 +20,7 @@
 | :---: | :----: | :---------------------------------------------------- | :----------------- |
 |  xxx  | tot 0  | Identifica una xarxa (Routing tables)                 | `192.168. 35.  0`  |
 |  xxx  | tot 1  | Broadcast a la xarxa                                  | `192.168. 35.255`  |
-| tot 0 | tot 0  | Identifica un host (DHCP)                             | `  0.  0.  0.  0 ` |
+| tot 0 | tot 0  | Identifica un host (DHCP)                             | `  0.  0.  0.  0`  |
 | tot 1 | tot 1  | Broadcast a la xarxa, adreça destí en DHCP            | `255.255.255.255`  |
 |  127  |  xxx   | host loopback: comunicació entre processos amb TCP/IP | `127.xxx.xxx.xxx`  |
 
