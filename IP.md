@@ -1,3 +1,14 @@
+- [IP](#ip)
+  - [Classes:](#classes)
+  - [Adreces especials:](#adreces-especials)
+  - [Adreces privades:](#adreces-privades)
+  - [Subnetting](#subnetting)
+  - [Classless Inter-Domain Routing (CIDR)](#classless-inter-domain-routing-cidr)
+  - [Taules d'encaminament](#taules-dencaminament)
+  - [Protocol ARP (Address Resolution Protocol)](#protocol-arp-address-resolution-protocol)
+  - [Capçalera IP](#capçalera-ip)
+  - [Fragmentació IP](#fragmentació-ip)
+
 # IP
 
 - 32 bits
