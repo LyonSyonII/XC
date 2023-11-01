@@ -105,7 +105,7 @@ El protocol detecta adreces duplicades i actualitza les MAC de les taules ARP si
 
 | Nom                 | Bits | Descripcio                                                   |
 | ------------------- | ---- | ------------------------------------------------------------ |
-| version             | 4    | Versió del protocol                                          |
+| Version             | 4    | Versió del protocol                                          |
 | IHL                 | 4    | Longitud de la capçalera (blocs de 4 octets / 32 bits)       |
 | Type of Service     | 8    | Tipus de servei `xxxdtrc0`                                   |
 | Total Length        | 16   | Mida del datagrama en bytes                                  |
