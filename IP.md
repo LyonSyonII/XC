@@ -30,6 +30,9 @@ IP-9: https://youtu.be/-nXRVIb1u5s (NAT)
     - [Com funciona](#com-funciona)
   - [Mecanisme NAT (Network Address Translation)](#mecanisme-nat-network-address-translation)
     - [DNAT (Destination NAT)](#dnat-destination-nat)
+  - [Algorismes d'enrutament](#algorismes-denrutament)
+    - [Routing Information Protocol (RIP)](#routing-information-protocol-rip)
+      - [Solució al *Count to Infinity*](#solució-al-count-to-infinity)
 
 # IP
 
@@ -305,3 +308,23 @@ Es representa amb una taula d'encaminament:
 Permet connexions externes a servidors interns (adreces privades).
 
 Cal fer una entrada manual al NAT indicant que tot el que rebi a l'adreça pública ho redirigeixi a l'adreça privada (alias).
+
+## Algorismes d'enrutament
+Afegeixen entrades a les taules d'enrutament.
+
+### Routing Information Protocol (RIP)
+Mesura la distàcnia per a arribar a la destinació en salts (*hops*).  
+És 1 si està directament connectat, i >= 2 si no.
+
+S'utilitza el port 520 pel broadcast.
+
+El router envia un missatge RIP cada 30 segons als veïns.  
+Si un veí no envia cap missatge en 180 segons, es considera caigut (*down).
+
+El número màxim de salts és 16, que es considera infinit.
+
+#### Solució al *Count to Infinity*
+Si hi ha algun bucle en la xarxa, el RIP podria anar augmentant els hops fins a l'infinit.
+
+Per a evitar-ho s'utilitza la tècnica de *Split horizon*, que elimina de les taules d'enrutament totes les entrades que ja estiguin contingudes en els gateway dels routers de la xarxa.
+
