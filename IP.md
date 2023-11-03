@@ -95,6 +95,11 @@ C => `/24` => 255.255.255.0
 > Dues subxarxes estrictament consecutives es poden agregar en un `/x - 1`.  
 > `200.1.10.0/24 i 200.1.11.0/24 => 200.1.10.0/23`
 
+La summarització consisteix en agregar a nivell de classe.
+
+> Dues subxarxes `1.2.3.0/25` i `1.2.3.128/25` se sumaritzarien en `1.0.0.0/8`, perquè són xarxes de classe A.
+> Dues subxarxes `172.168.1.63/25` i `172.168.200.128/25` se sumaritzarien en `172.168.0.0/16`, perquè són xarxes de classe B.
+
 > FI VIDEO 2
 
 ## Taules d'encaminament
